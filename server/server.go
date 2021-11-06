@@ -3,24 +3,24 @@ package server
 import (
 	"grocery-backend/storage"
 
-	"github.com/gofiber/fiber"
+	fiber "github.com/gofiber/fiber/v2"
 )
 
 type server struct {
 	storage storage.Storage
+	app     *fiber.App
 }
 
 func NewGroceryServer(config *ServerConfig, st storage.Storage) Server {
-	f := fiber.New()
+	app := fiber.New()
 
-	f.Get("/", IndexHandler)
+	app.Get("/", IndexHandler)
 
-	f.Get("/item", GetItemListHandler(st))
+	app.Get("/item", GetItemListHandler(st))
 
 	return &server{storage: st}
 }
 
-func (s *server) start() error {
-
-	return nil
+func (s *server) Start() error {
+	return s.app.Listen("0.0.0.0:8080")
 }

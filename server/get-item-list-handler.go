@@ -5,27 +5,25 @@ import (
 	"grocery-backend/storage"
 	"net/http"
 
-	"github.com/gofiber/fiber"
+	fiber "github.com/gofiber/fiber/v2"
 )
 
-type GetItemListReq struct {
-	Skip  int
-	Count int
-}
-
-type GetItemListRes struct {
-	Items []dto.Item
-}
-
-func GetItemListHandler(s storage.Storage) func(c *fiber.Ctx) {
-	return func(c *fiber.Ctx) {
-		reqBody := &GetItemListReq{}
-		err := c.BodyParser(reqBody)
+func GetItemListHandler(s storage.Storage) func(*fiber.Ctx) error {
+	return func(ctx *fiber.Ctx) error {
+		reqBody := &dto.GetItemListReq{}
+		err := ctx.BodyParser(reqBody)
 		if err != nil {
-			c.SendStatus(http.StatusBadRequest)
-			return
+			ctx.SendStatus(http.StatusBadRequest)
+			return err
 		}
 
-		s.GetItemList(reqBody.Skip, reqBody.Count)
+		items, err := s.GetItemList(reqBody.Skip, reqBody.Count)
+		if err != nil {
+			ctx.JSON(&dto.GetItemListRes{Items: nil, Error: err})
+			return nil
+		}
+
+		ctx.JSON(&dto.GetItemListRes{Items: items, Error: nil})
+		return nil
 	}
 }

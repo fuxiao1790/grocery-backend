@@ -1,7 +1,7 @@
 package server
 
 type Server interface {
-	start() error
+	Start() error
 }
 
 type ServerConfig struct {
