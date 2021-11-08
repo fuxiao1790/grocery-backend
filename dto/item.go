@@ -7,10 +7,26 @@ type Item struct {
 	Name    string             `bson:"name" json:"name"`
 	Price   string             `bson:"price" json:"price"`
 	ID      primitive.ObjectID `bson:"id" json:"id"`
+	StoreID primitive.ObjectID `bson:"store-id" json:"store-id"`
 }
 
-type Order struct {
-	Items    []Item             `bson:"items" json:"items"`
-	Location string             `bson:"location" json:"location"`
-	ID       primitive.ObjectID `bson:"id" json:"id"`
+type GetItemListReq struct {
+	Skip  int
+	Count int
+}
+
+type GetItemListRes struct {
+	Items *[]Item
+	Error error
+}
+
+type NewItemReq struct {
+	IconUri string             `bson:"icon-uri" json:"icon-uri"`
+	Name    string             `bson:"name" json:"name"`
+	Price   string             `bson:"price" json:"price"`
+	StoreID primitive.ObjectID `bson:"store-id" json:"store-id"`
+}
+
+type NewItemRes struct {
+	Error error
 }

@@ -16,7 +16,17 @@ func NewGroceryServer(config *ServerConfig, st storage.Storage) Server {
 
 	app.Get("/", IndexHandler)
 
-	app.Get("/item", GetItemListHandler(st))
+	app.Get("/item/list", GetItemListHandler(st))
+	// app.Post("/item/new", GetItemListHandler(st))
+	// app.Delete("/item/del", GetItemListHandler(st))
+
+	app.Get("/store/list", GetStoreListHandler(st))
+	// app.Post("/store/new", GetItemListHandler(st))
+	// app.Delete("/store/del", GetItemListHandler(st))
+
+	app.Get("/order/list", GetOrderListHandler(st))
+	// app.Post("/order/new", GetItemListHandler(st))
+	// app.Delete("/order/del", GetItemListHandler(st))
 
 	return &server{storage: st}
 }
