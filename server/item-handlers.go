@@ -48,7 +48,6 @@ func NewItemHandler(s storage.Storage) func(*fiber.Ctx) error {
 			IconUri: reqBody.IconUri,
 			Name:    reqBody.Name,
 			Price:   reqBody.Price,
-			StoreID: [12]byte{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
 		})
 
 		if err != nil {
