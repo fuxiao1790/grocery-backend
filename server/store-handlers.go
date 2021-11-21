@@ -14,7 +14,7 @@ func GetStoreListHandler(s storage.Storage) func(*fiber.Ctx) error {
 		err := ctx.BodyParser(reqBody)
 		if err != nil {
 			ctx.SendStatus(http.StatusBadRequest)
-			return err
+			return nil
 		}
 
 		items, err := s.GetStoreList(reqBody.Skip, reqBody.Count)

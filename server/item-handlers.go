@@ -6,6 +6,7 @@ import (
 	"net/http"
 
 	fiber "github.com/gofiber/fiber/v2"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 func GetItemListHandler(s storage.Storage) func(*fiber.Ctx) error {
@@ -14,10 +15,16 @@ func GetItemListHandler(s storage.Storage) func(*fiber.Ctx) error {
 		err := ctx.BodyParser(reqBody)
 		if err != nil {
 			ctx.SendStatus(http.StatusBadRequest)
-			return err
+			return nil
 		}
 
-		items, err := s.GetItemList(reqBody.Skip, reqBody.Count)
+		storeID, err := primitive.ObjectIDFromHex(reqBody.StoreID)
+		if err != nil {
+			ctx.SendStatus(http.StatusBadRequest)
+			return nil
+		}
+
+		items, err := s.GetItemList(reqBody.Skip, reqBody.Count, storeID)
 		if err != nil {
 			ctx.JSON(&dto.GetItemListRes{Items: nil, Error: err})
 			return nil
@@ -34,7 +41,7 @@ func NewItemHandler(s storage.Storage) func(*fiber.Ctx) error {
 		err := ctx.BodyParser(reqBody)
 		if err != nil {
 			ctx.SendStatus(http.StatusBadRequest)
-			return err
+			return nil
 		}
 
 		err = s.CreateItem(&dto.Item{

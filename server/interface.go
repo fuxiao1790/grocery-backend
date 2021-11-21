@@ -4,5 +4,6 @@ type Server interface {
 	Start() error
 }
 
-type ServerConfig struct {
+type Config struct {
+	Port int
 }

@@ -14,7 +14,7 @@ func GetOrderListHandler(s storage.Storage) func(*fiber.Ctx) error {
 		err := ctx.BodyParser(reqBody)
 		if err != nil {
 			ctx.SendStatus(http.StatusBadRequest)
-			return err
+			return nil
 		}
 
 		items, err := s.GetOrderList(reqBody.Skip, reqBody.Count)
