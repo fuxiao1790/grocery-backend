@@ -7,9 +7,9 @@ import (
 )
 
 type Storage interface {
-	GetItemList(skip int, count int, storeID primitive.ObjectID) (*[]dto.Item, error)
-	GetOrderList(skip int, count int) (*[]dto.Order, error)
-	GetStoreList(skip int, count int) (*[]dto.Store, error)
+	GetItemList(skip int, count int, storeID primitive.ObjectID) ([]*dto.Item, error)
+	GetOrderList(skip int, count int) ([]*dto.Order, error)
+	GetStoreList(skip int, count int) ([]*dto.Store, error)
 
 	CreateItem(*dto.Item) error
 	UpdateItem(*dto.Item) error

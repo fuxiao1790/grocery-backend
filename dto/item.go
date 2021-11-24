@@ -11,14 +11,14 @@ type Item struct {
 }
 
 type GetItemListReq struct {
-	Skip    int
-	Count   int
-	StoreID string
+	Skip    int    `bson:"skip" json:"skip"`
+	Count   int    `bson:"count" json:"count"`
+	StoreID string `bson:"store-id" json:"store-id"`
 }
 
 type GetItemListRes struct {
-	Items *[]Item
-	Error error
+	Items []*Item `bson:"items" json:"items"`
+	Error error   `bson:"error" json:"error"`
 }
 
 type NewItemReq struct {

@@ -93,12 +93,12 @@ func (s *storage) DeleteItem(item *dto.Item) error {
 	return nil
 }
 
-func (s *storage) GetItemList(skip int, count int, storeID primitive.ObjectID) (*[]dto.Item, error) {
+func (s *storage) GetItemList(skip int, count int, storeID primitive.ObjectID) ([]*dto.Item, error) {
 	logrus.Info("Get Item List")
 
 	var cursor *mongo.Cursor
 	var err error
-	var res []dto.Item
+	var res []*dto.Item
 
 	{
 		ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
@@ -126,7 +126,7 @@ func (s *storage) GetItemList(skip int, count int, storeID primitive.ObjectID) (
 		}
 	}
 
-	return &res, nil
+	return res, nil
 }
 
 func (s *storage) CreateOrder(order *dto.Order) error {
@@ -161,12 +161,12 @@ func (s *storage) DeleteOrder(order *dto.Order) error {
 	return nil
 }
 
-func (s *storage) GetOrderList(skip int, count int) (*[]dto.Order, error) {
+func (s *storage) GetOrderList(skip int, count int) ([]*dto.Order, error) {
 	logrus.Info("Get Order List")
 
 	var cursor *mongo.Cursor
 	var err error
-	var res []dto.Order
+	var res []*dto.Order
 
 	{
 		ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
@@ -194,7 +194,7 @@ func (s *storage) GetOrderList(skip int, count int) (*[]dto.Order, error) {
 		}
 	}
 
-	return &res, nil
+	return res, nil
 }
 
 func (s *storage) CreateStore(store *dto.Store) error {
@@ -229,12 +229,12 @@ func (s *storage) DeleteStore(store *dto.Store) error {
 	return nil
 }
 
-func (s *storage) GetStoreList(skip int, count int) (*[]dto.Store, error) {
+func (s *storage) GetStoreList(skip int, count int) ([]*dto.Store, error) {
 	logrus.Info("Get Store List")
 
 	var cursor *mongo.Cursor
 	var err error
-	var res []dto.Store
+	var res []*dto.Store
 
 	{
 		ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
@@ -262,5 +262,5 @@ func (s *storage) GetStoreList(skip int, count int) (*[]dto.Store, error) {
 		}
 	}
 
-	return &res, nil
+	return res, nil
 }

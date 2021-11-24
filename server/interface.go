@@ -5,5 +5,7 @@ type Server interface {
 }
 
 type Config struct {
-	Port int
+	Port     int
+	CertFile string
+	KeyFile  string
 }

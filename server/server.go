@@ -34,5 +34,9 @@ func NewGroceryServer(config *Config, st storage.Storage) Server {
 }
 
 func (s *server) Start() error {
-	return s.app.Listen(fmt.Sprintf("0.0.0.0:%d", s.config.Port))
+	return s.app.ListenTLS(
+		fmt.Sprintf("0.0.0.0:%d", s.config.Port),
+		s.config.CertFile,
+		s.config.KeyFile,
+	)
 }

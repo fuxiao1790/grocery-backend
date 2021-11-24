@@ -9,11 +9,11 @@ type Store struct {
 }
 
 type GetStoreListReq struct {
-	Skip  int
-	Count int
+	Skip  int `bson:"skip" json:"skip"`
+	Count int `bson:"count" json:"count"`
 }
 
 type GetStoreListRes struct {
-	Stores *[]Store
-	Error  error
+	Stores []*Store `bson:"stores" json:"stores"`
+	Error  error    `bson:"error" json:"error"`
 }

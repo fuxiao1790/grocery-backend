@@ -27,3 +27,20 @@ func GetOrderListHandler(s storage.Storage) func(*fiber.Ctx) error {
 		return nil
 	}
 }
+
+func CreateOrder(s storage.Storage) func(*fiber.Ctx) error {
+	return func(ctx *fiber.Ctx) error {
+		reqBody := &dto.CreateOrderReq{}
+		err := ctx.BodyParser(reqBody)
+		if err != nil {
+			ctx.SendStatus(http.StatusBadRequest)
+		}
+
+		err = s.CreateOrder(&reqBody.Order)
+		if err != nil {
+			ctx.JSON(&dto.CreateOrderRes{Error: err})
+		}
+
+		return nil
+	}
+}
