@@ -1,12 +1,10 @@
 package dto
 
-import "go.mongodb.org/mongo-driver/bson/primitive"
-
 type Order struct {
-	Items    map[*Item]int      `bson:"items" json:"items"`
-	Location string             `bson:"location" json:"location"`
-	ID       primitive.ObjectID `bson:"_id" json:"_id"`
-	StoreID  primitive.ObjectID `bson:"store-id" json:"store-id"`
+	Items    map[*Item]int `bson:"items" json:"items"`
+	Location string        `bson:"location" json:"location"`
+	ID       string        `bson:"_id" json:"_id"`
+	StoreID  string        `bson:"store-id" json:"store-id"`
 }
 
 type CreateOrderReq struct {

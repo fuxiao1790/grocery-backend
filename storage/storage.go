@@ -2,6 +2,7 @@ package storage
 
 import (
 	"context"
+	"errors"
 	"grocery-backend/dto"
 	"time"
 
@@ -28,6 +29,8 @@ type Config struct {
 	Uri  string
 	Name string
 }
+
+var INVALID_ID = errors.New("inavlid id")
 
 func NewMongoDBStorage(config *Config) (Storage, error) {
 	re := &storage{}
@@ -93,7 +96,11 @@ func (s *storage) DeleteItem(item *dto.Item) error {
 	return nil
 }
 
-func (s *storage) GetItemList(skip int, count int, storeID primitive.ObjectID) ([]*dto.Item, error) {
+func (s *storage) ValidateID(id string) bool {
+	return primitive.IsValidObjectID(id)
+}
+
+func (s *storage) GetItemList(skip int, count int, storeID string) ([]*dto.Item, error) {
 	logrus.Info("Get Item List")
 
 	var cursor *mongo.Cursor
@@ -104,12 +111,17 @@ func (s *storage) GetItemList(skip int, count int, storeID primitive.ObjectID) (
 		ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 		defer cancel()
 
+		storeOjbectID, err := primitive.ObjectIDFromHex(storeID)
+		if err != nil {
+			return nil, INVALID_ID
+		}
+
 		cursor, err = s.itemsCollection.Find(
 			ctx,
-			bson.M{"store-id": storeID},
+			bson.M{"store-id": storeOjbectID},
 			options.Find().SetSort(bson.M{"_id": -1}),
-			options.Find().SetLimit(int64(count)),
 			options.Find().SetSkip(int64(skip)),
+			options.Find().SetLimit(int64(count)),
 		)
 		if err != nil {
 			return nil, err
@@ -125,6 +137,8 @@ func (s *storage) GetItemList(skip int, count int, storeID primitive.ObjectID) (
 			return nil, err
 		}
 	}
+
+	logrus.Debugf("skip: %d, count: %d, actual: %d", skip, count, len(res))
 
 	return res, nil
 }
@@ -176,8 +190,8 @@ func (s *storage) GetOrderList(skip int, count int) ([]*dto.Order, error) {
 			ctx,
 			bson.M{},
 			options.Find().SetSort(bson.M{"_id": -1}),
-			options.Find().SetLimit(int64(count)),
 			options.Find().SetSkip(int64(skip)),
+			options.Find().SetLimit(int64(count)),
 		)
 		if err != nil {
 			return nil, err
@@ -193,6 +207,8 @@ func (s *storage) GetOrderList(skip int, count int) ([]*dto.Order, error) {
 			return nil, err
 		}
 	}
+
+	logrus.Debugf("skip: %d, count: %d, actual: %d", skip, count, len(res))
 
 	return res, nil
 }
@@ -244,8 +260,8 @@ func (s *storage) GetStoreList(skip int, count int) ([]*dto.Store, error) {
 			ctx,
 			bson.M{},
 			options.Find().SetSort(bson.M{"_id": -1}),
-			options.Find().SetLimit(int64(count)),
 			options.Find().SetSkip(int64(skip)),
+			options.Find().SetLimit(int64(count)),
 		)
 		if err != nil {
 			return nil, err
@@ -261,6 +277,8 @@ func (s *storage) GetStoreList(skip int, count int) ([]*dto.Store, error) {
 			return nil, err
 		}
 	}
+
+	logrus.Debugf("skip: %d, count: %d, actual: %d", skip, count, len(res))
 
 	return res, nil
 }

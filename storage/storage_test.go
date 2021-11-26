@@ -51,7 +51,7 @@ func createTestData(st Storage) {
 		st.CreateStore(&dto.Store{
 			Location: fmt.Sprintf("location %d", i),
 			Name:     fmt.Sprintf("name %d", i),
-			ID:       primitive.NewObjectIDFromTimestamp(time.Now()),
+			ID:       primitive.NewObjectIDFromTimestamp(time.Now()).String(),
 		})
 	}
 
@@ -63,7 +63,7 @@ func createTestData(st Storage) {
 				IconUri: fmt.Sprintf("%s | uri %d", store.Name, i),
 				Name:    fmt.Sprintf("%s | name %d", store.Name, i),
 				Price:   fmt.Sprintf("%d", i*10),
-				ID:      primitive.NewObjectIDFromTimestamp(time.Now()),
+				ID:      primitive.NewObjectIDFromTimestamp(time.Now()).String(),
 				StoreID: store.ID,
 			})
 		}

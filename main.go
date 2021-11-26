@@ -25,9 +25,7 @@ func main() {
 		CertFile: "./tls/cert.pem",
 		KeyFile:  "./tls/key.pem",
 	}
-
 	server := server.NewGroceryServer(config, storage)
-
 	err = server.Start()
 	if err != nil {
 		log.Fatal(err)

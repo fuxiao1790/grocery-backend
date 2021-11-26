@@ -1,11 +1,9 @@
 package dto
 
-import "go.mongodb.org/mongo-driver/bson/primitive"
-
 type Store struct {
-	Location string             `bson:"location" json:"location"`
-	ID       primitive.ObjectID `bson:"_id" json:"_id"`
-	Name     string             `bson:"name" json:"name"`
+	Location string `bson:"location" json:"location"`
+	ID       string `bson:"_id" json:"_id"`
+	Name     string `bson:"name" json:"name"`
 }
 
 type GetStoreListReq struct {

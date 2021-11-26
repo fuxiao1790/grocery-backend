@@ -13,7 +13,8 @@ func GetOrderListHandler(s storage.Storage) func(*fiber.Ctx) error {
 		reqBody := &dto.GetOrderListReq{}
 		err := ctx.BodyParser(reqBody)
 		if err != nil {
-			ctx.SendStatus(http.StatusBadRequest)
+			ctx.Status(http.StatusBadRequest)
+			ctx.JSON(dto.GetItemListRes{Items: nil, Error: CANNOT_PARSE_BODY})
 			return nil
 		}
 

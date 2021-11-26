@@ -6,7 +6,6 @@ import (
 	"net/http"
 
 	fiber "github.com/gofiber/fiber/v2"
-	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 func GetItemListHandler(s storage.Storage) func(*fiber.Ctx) error {
@@ -14,17 +13,12 @@ func GetItemListHandler(s storage.Storage) func(*fiber.Ctx) error {
 		reqBody := &dto.GetItemListReq{}
 		err := ctx.BodyParser(reqBody)
 		if err != nil {
-			ctx.SendStatus(http.StatusBadRequest)
+			ctx.Status(http.StatusBadRequest)
+			ctx.JSON(dto.GetItemListRes{Items: nil, Error: CANNOT_PARSE_BODY})
 			return nil
 		}
 
-		storeID, err := primitive.ObjectIDFromHex(reqBody.StoreID)
-		if err != nil {
-			ctx.SendStatus(http.StatusBadRequest)
-			return nil
-		}
-
-		items, err := s.GetItemList(reqBody.Skip, reqBody.Count, storeID)
+		items, err := s.GetItemList(reqBody.Skip, reqBody.Count, reqBody.StoreID)
 		if err != nil {
 			ctx.JSON(&dto.GetItemListRes{Items: nil, Error: err})
 			return nil
@@ -40,7 +34,8 @@ func NewItemHandler(s storage.Storage) func(*fiber.Ctx) error {
 		reqBody := &dto.NewItemReq{}
 		err := ctx.BodyParser(reqBody)
 		if err != nil {
-			ctx.SendStatus(http.StatusBadRequest)
+			ctx.Status(http.StatusBadRequest)
+			ctx.JSON(dto.GetItemListRes{Items: nil, Error: CANNOT_PARSE_BODY})
 			return nil
 		}
 

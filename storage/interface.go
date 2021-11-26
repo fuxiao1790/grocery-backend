@@ -2,12 +2,10 @@ package storage
 
 import (
 	"grocery-backend/dto"
-
-	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 type Storage interface {
-	GetItemList(skip int, count int, storeID primitive.ObjectID) ([]*dto.Item, error)
+	GetItemList(skip int, count int, storeID string) ([]*dto.Item, error)
 	GetOrderList(skip int, count int) ([]*dto.Order, error)
 	GetStoreList(skip int, count int) ([]*dto.Store, error)
 
