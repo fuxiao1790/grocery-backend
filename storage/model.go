@@ -27,6 +27,5 @@ type Store struct {
 type User struct {
 	Username       string             `bson:"username" json:"username"`
 	HashedPassword string             `bson:"hashed-password" json:"hashed-password"`
-	Salt           string             `bson:"salt" json:"salt"`
 	ID             primitive.ObjectID `bson:"_id" json:"_id"`
 }
