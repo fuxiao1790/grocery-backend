@@ -6,6 +6,7 @@ import (
 	"testing"
 	"time"
 
+	"github.com/stretchr/testify/assert"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
@@ -32,6 +33,38 @@ var TEST_STORE = &dto.Store{
 
 func TestMain(m *testing.M) {
 	m.Run()
+}
+
+func Test_User(t *testing.T) {
+	st, err := NewMongoDBStorage(&Config{
+		Uri:  MONGO_DB_URI,
+		Name: DB_NAME,
+	})
+	if err != nil {
+		t.FailNow()
+	}
+
+	{
+		err := st.CreateUser(&User{
+			Username:       "test-user-name",
+			HashedPassword: "test-hashed-password",
+			Salt:           "test-salt",
+		})
+		if err != nil {
+			t.FailNow()
+		}
+	}
+
+	{
+		user, err := st.GetUser(&User{
+			Username: "test-user-name",
+		})
+		if err != nil {
+			t.FailNow()
+		}
+
+		assert.NotNil(t, user)
+	}
 }
 
 func Test_GetList(t *testing.T) {

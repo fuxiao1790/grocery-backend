@@ -20,4 +20,7 @@ type Storage interface {
 	CreateStore(*dto.Store) error
 	UpdateStore(*dto.Store) error
 	DeleteStore(*dto.Store) error
+
+	CreateUser(*User) error
+	GetUser(*User) (*User, error)
 }

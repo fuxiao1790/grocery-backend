@@ -17,12 +17,14 @@ import (
 const ITEM_COLLECTION_NAME = "ITEMS"
 const ORDER_COLLECTION_NAME = "ORDERS"
 const STORES_COLLECTION_NAME = "STORES"
+const USER_COLLECTION_NAME = "USERS"
 
 type storage struct {
 	client           *mongo.Client
 	itemsCollection  *mongo.Collection
 	ordersCollection *mongo.Collection
 	storesCollection *mongo.Collection
+	userCollection   *mongo.Collection
 }
 
 type Config struct {
@@ -60,6 +62,7 @@ func NewMongoDBStorage(config *Config) (Storage, error) {
 	re.itemsCollection = re.client.Database(config.Name).Collection(ITEM_COLLECTION_NAME)
 	re.ordersCollection = re.client.Database(config.Name).Collection(ORDER_COLLECTION_NAME)
 	re.storesCollection = re.client.Database(config.Name).Collection(STORES_COLLECTION_NAME)
+	re.userCollection = re.client.Database(config.Name).Collection(USER_COLLECTION_NAME)
 
 	return re, nil
 }
@@ -281,4 +284,44 @@ func (s *storage) GetStoreList(skip int, count int) ([]*dto.Store, error) {
 	logrus.Debugf("skip: %d, count: %d, actual: %d", skip, count, len(res))
 
 	return res, nil
+}
+
+func (s *storage) CreateUser(user *User) error {
+	logrus.Info("Create User")
+
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+
+	user.ID = primitive.NewObjectIDFromTimestamp(time.Now())
+	res, err := s.userCollection.InsertOne(ctx, user)
+	if err != nil {
+		return err
+	}
+
+	logrus.Debug(res)
+
+	return nil
+}
+
+func (s *storage) GetUser(user *User) (*User, error) {
+	logrus.Info("Get User")
+
+	var res User
+
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+
+	mongoRes := s.userCollection.FindOne(ctx, bson.M{"username": user.Username})
+	if mongoRes.Err() == mongo.ErrNoDocuments {
+		return nil, nil
+	}
+	if mongoRes.Err() != nil {
+		return nil, mongoRes.Err()
+	}
+
+	mongoRes.Decode(&res)
+
+	logrus.Debug(res)
+
+	return &res, nil
 }
