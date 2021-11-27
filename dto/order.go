@@ -12,7 +12,7 @@ type CreateOrderReq struct {
 }
 
 type CreateOrderRes struct {
-	Error error `bson:"error" json:"error"`
+	Error Err `bson:"error" json:"error"`
 }
 
 type GetOrderListReq struct {
@@ -22,5 +22,5 @@ type GetOrderListReq struct {
 
 type GetOrderListRes struct {
 	Orders []*Order `bson:"orders" json:"orders"`
-	Error  error    `bson:"error" json:"error"`
+	Error  Err      `bson:"error" json:"error"`
 }

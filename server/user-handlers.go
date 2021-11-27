@@ -22,7 +22,7 @@ func LoginHandler(st storage.Storage) func(*fiber.Ctx) error {
 		err := ctx.BodyParser(reqBody)
 		if err != nil {
 			ctx.Status(http.StatusBadRequest)
-			ctx.JSON(dto.GetItemListRes{Items: nil, Error: CANNOT_PARSE_BODY})
+			ctx.JSON(dto.GetItemListRes{Items: nil, Error: dto.Err{Error: CANNOT_PARSE_BODY}})
 			return nil
 		}
 
@@ -30,13 +30,13 @@ func LoginHandler(st storage.Storage) func(*fiber.Ctx) error {
 		user, err := st.GetUser(&storage.User{Username: reqBody.Username})
 		if err != nil {
 			ctx.Status(http.StatusBadRequest)
-			ctx.JSON(dto.LoginRes{Error: err})
+			ctx.JSON(dto.LoginRes{Error: dto.Err{Error: err}})
 			return nil
 		}
 		// the given username does not exist
 		if user == nil {
 			ctx.Status(http.StatusBadRequest)
-			ctx.JSON(dto.LoginRes{Error: USER_DOES_NOT_EXIST})
+			ctx.JSON(dto.LoginRes{Error: dto.Err{Error: USER_DOES_NOT_EXIST}})
 			return nil
 		}
 
@@ -44,12 +44,12 @@ func LoginHandler(st storage.Storage) func(*fiber.Ctx) error {
 		err = bcrypt.CompareHashAndPassword([]byte(user.HashedPassword), []byte(reqBody.Password))
 		if err != nil {
 			ctx.Status(http.StatusBadRequest)
-			ctx.JSON(dto.LoginRes{Error: err})
+			ctx.JSON(dto.LoginRes{Error: dto.Err{Error: err}})
 			return nil
 		}
 
 		ctx.Status(http.StatusOK)
-		ctx.JSON(dto.LoginRes{UserID: user.ID.Hex(), Error: nil})
+		ctx.JSON(dto.LoginRes{UserID: user.ID.Hex(), Error: dto.Err{Error: nil}})
 
 		return nil
 	}
@@ -62,7 +62,7 @@ func RegisterHandler(st storage.Storage) func(*fiber.Ctx) error {
 		err := ctx.BodyParser(reqBody)
 		if err != nil {
 			ctx.Status(http.StatusBadRequest)
-			ctx.JSON(dto.RegisterRes{Error: CANNOT_PARSE_BODY})
+			ctx.JSON(dto.RegisterRes{Error: dto.Err{Error: CANNOT_PARSE_BODY}})
 			return nil
 		}
 
@@ -71,12 +71,12 @@ func RegisterHandler(st storage.Storage) func(*fiber.Ctx) error {
 		user, err := st.GetUser(&storage.User{Username: reqBody.Username})
 		if err != nil {
 			ctx.Status(http.StatusInternalServerError)
-			ctx.JSON(dto.RegisterRes{Error: nil})
+			ctx.JSON(dto.RegisterRes{Error: dto.Err{Error: nil}})
 			return nil
 		}
 		if user != nil {
 			ctx.Status(http.StatusBadRequest)
-			ctx.JSON(dto.RegisterRes{Error: USER_ALREADY_EXIST})
+			ctx.JSON(dto.RegisterRes{Error: dto.Err{Error: USER_ALREADY_EXIST}})
 			return nil
 		}
 
@@ -84,7 +84,7 @@ func RegisterHandler(st storage.Storage) func(*fiber.Ctx) error {
 		saltedHashedPassword, err := bcrypt.GenerateFromPassword([]byte(reqBody.Password), COST)
 		if err != nil {
 			ctx.Status(http.StatusBadRequest)
-			ctx.JSON(dto.RegisterRes{Error: err})
+			ctx.JSON(dto.RegisterRes{Error: dto.Err{Error: err}})
 			return nil
 		}
 
@@ -95,12 +95,12 @@ func RegisterHandler(st storage.Storage) func(*fiber.Ctx) error {
 		})
 		if err != nil {
 			ctx.Status(http.StatusBadRequest)
-			ctx.JSON(dto.RegisterRes{Error: err})
+			ctx.JSON(dto.RegisterRes{Error: dto.Err{Error: err}})
 			return nil
 		}
 
 		ctx.Status(http.StatusOK)
-		ctx.JSON(dto.RegisterRes{Error: nil})
+		ctx.JSON(dto.RegisterRes{Error: dto.Err{Error: nil}})
 
 		return nil
 	}

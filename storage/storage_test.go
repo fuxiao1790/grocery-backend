@@ -48,7 +48,6 @@ func Test_User(t *testing.T) {
 		err := st.CreateUser(&User{
 			Username:       "test-user-name",
 			HashedPassword: "test-hashed-password",
-			Salt:           "test-salt",
 		})
 		if err != nil {
 			t.FailNow()

@@ -11,7 +11,7 @@ type RegisterReq struct {
 }
 
 type RegisterRes struct {
-	Error error `bson:"error" json:"error"`
+	Error Err `bson:"error" json:"error"`
 }
 
 type LoginReq struct {
@@ -21,5 +21,5 @@ type LoginReq struct {
 
 type LoginRes struct {
 	UserID string `bson:"userid" json:"userid"`
-	Error  error  `bson:"error" json:"error"`
+	Error  Err    `bson:"error" json:"error"`
 }

@@ -16,7 +16,7 @@ type GetItemListReq struct {
 
 type GetItemListRes struct {
 	Items []*Item `bson:"items" json:"items"`
-	Error error   `bson:"error" json:"error"`
+	Error Err     `bson:"error" json:"error"`
 }
 
 type NewItemReq struct {

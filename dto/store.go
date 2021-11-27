@@ -13,5 +13,5 @@ type GetStoreListReq struct {
 
 type GetStoreListRes struct {
 	Stores []*Store `bson:"stores" json:"stores"`
-	Error  error    `bson:"error" json:"error"`
+	Error  Err      `bson:"error" json:"error"`
 }
