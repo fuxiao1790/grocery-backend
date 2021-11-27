@@ -27,5 +27,5 @@ type NewItemReq struct {
 }
 
 type NewItemRes struct {
-	Error error
+	Error Err `bson:"error" json:"error"`
 }

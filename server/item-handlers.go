@@ -46,11 +46,11 @@ func NewItemHandler(s storage.Storage) func(*fiber.Ctx) error {
 		})
 
 		if err != nil {
-			ctx.JSON(&dto.NewItemRes{Error: err})
+			ctx.JSON(&dto.NewItemRes{Error: dto.Err{Error: err}})
 			return nil
 		}
 
-		ctx.JSON(&dto.NewItemRes{Error: nil})
+		ctx.JSON(&dto.NewItemRes{Error: dto.Err{Error: err}})
 		return nil
 	}
 }
