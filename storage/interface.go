@@ -13,7 +13,7 @@ type Storage interface {
 	UpdateItem(*dto.Item) error
 	DeleteItem(*dto.Item) error
 
-	CreateOrder(*dto.Order) error
+	CreateOrder(order *dto.Order) error
 	UpdateOrder(*dto.Order) error
 	DeleteOrder(*dto.Order) error
 

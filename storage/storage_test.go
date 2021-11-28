@@ -19,11 +19,15 @@ var TEST_ITEM = &dto.Item{
 	IconUri: "test uri",
 	Name:    "test name",
 	Price:   "test price",
+	ID:      "619d1f0ac5aa3b27c13861eb",
+	StoreID: "619d1f09c5aa3b27c13861ac",
 }
 
 var TEST_ORDER = &dto.Order{
 	Items:    map[*dto.Item]int{TEST_ITEM: 1},
 	Location: "test location",
+	UserID:   "61a262824270c01dde9b34cb",
+	StoreID:  "619d1f09c5aa3b27c13861ac",
 }
 
 var TEST_STORE = &dto.Store{
@@ -33,6 +37,19 @@ var TEST_STORE = &dto.Store{
 
 func TestMain(m *testing.M) {
 	m.Run()
+}
+
+func Test_Order(t *testing.T) {
+	st, err := NewMongoDBStorage(&Config{
+		Uri:  MONGO_DB_URI,
+		Name: DB_NAME,
+	})
+	if err != nil {
+		t.FailNow()
+	}
+
+	err = st.CreateOrder(TEST_ORDER)
+	assert.Nil(t, err)
 }
 
 func Test_User(t *testing.T) {

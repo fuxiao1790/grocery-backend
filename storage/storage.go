@@ -152,7 +152,53 @@ func (s *storage) CreateOrder(order *dto.Order) error {
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 
-	res, err := s.ordersCollection.InsertOne(ctx, order)
+	// convert data from dto order to model order to store in db
+	mOrder := &Order{
+		Items:    make([]*OrderItem, len(order.Items)),
+		Location: order.Location,
+	}
+
+	index := 0
+	for item, count := range order.Items {
+		id, err := primitive.ObjectIDFromHex(item.ID)
+		if err != nil {
+			return err
+		}
+		storeID, err := primitive.ObjectIDFromHex(item.StoreID)
+		if err != nil {
+			return err
+		}
+
+		mOrder.Items[index] = &OrderItem{
+			IconUri: item.IconUri,
+			Name:    item.Name,
+			Price:   item.Price,
+			Count:   count,
+			ID:      id,
+			StoreID: storeID,
+		}
+
+		index++
+	}
+
+	{
+		id, err := primitive.ObjectIDFromHex(order.StoreID)
+		if err != nil {
+			return err
+		}
+		mOrder.StoreID = id
+	}
+	{
+		id, err := primitive.ObjectIDFromHex(order.UserID)
+		if err != nil {
+			return err
+		}
+		mOrder.UserID = id
+	}
+
+	mOrder.ID = primitive.NewObjectIDFromTimestamp(time.Now())
+
+	res, err := s.ordersCollection.InsertOne(ctx, mOrder)
 	if err != nil {
 		return err
 	}

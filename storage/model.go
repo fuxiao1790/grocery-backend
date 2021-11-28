@@ -10,8 +10,17 @@ type Item struct {
 	StoreID primitive.ObjectID `bson:"store-id" json:"store-id"`
 }
 
+type OrderItem struct {
+	IconUri string             `bson:"icon-uri" json:"icon-uri"`
+	Name    string             `bson:"name" json:"name"`
+	Price   string             `bson:"price" json:"price"`
+	Count   int                `bson:"count" json:"count"`
+	ID      primitive.ObjectID `bson:"_id" json:"_id"`
+	StoreID primitive.ObjectID `bson:"store-id" json:"store-id"`
+}
+
 type Order struct {
-	Items    map[*Item]int      `bson:"items" json:"items"`
+	Items    []*OrderItem       `bson:"items" json:"items"`
 	Location string             `bson:"location" json:"location"`
 	ID       primitive.ObjectID `bson:"_id" json:"_id"`
 	UserID   primitive.ObjectID `bson:"user-id" json:"user-id"`
