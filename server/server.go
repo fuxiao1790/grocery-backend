@@ -33,6 +33,9 @@ func NewGroceryServer(config *Config, st storage.Storage) Server {
 	app.Post("/user/login", LoginHandler(st))
 	app.Post("/user/register", RegisterHandler(st))
 
+	app.Post("/order/create", CreateOrderHandler(st))
+	app.Post("/order/list", GetOrderListHandler(st))
+
 	return &server{storage: st, app: app, config: config}
 }
 

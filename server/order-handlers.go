@@ -31,16 +31,22 @@ func GetOrderListHandler(s storage.Storage) func(*fiber.Ctx) error {
 	}
 }
 
-func CreateOrder(s storage.Storage) func(*fiber.Ctx) error {
+func CreateOrderHandler(s storage.Storage) func(*fiber.Ctx) error {
 	return func(ctx *fiber.Ctx) error {
-		reqBody := &dto.Order{}
+		reqBody := &dto.CreateOrderReq{}
 		err := ctx.BodyParser(reqBody)
 		if err != nil {
 			ctx.SendStatus(http.StatusBadRequest)
+			ctx.JSON(&dto.CreateOrderRes{Error: dto.Err{Error: err}})
 			return nil
 		}
 
-		err = s.CreateOrder(reqBody)
+		err = s.CreateOrder(&dto.Order{
+			Items:    reqBody.Items,
+			Location: reqBody.Location,
+			UserID:   reqBody.UserID,
+			StoreID:  reqBody.StoreID,
+		})
 		if err != nil {
 			ctx.Status(http.StatusBadRequest)
 			ctx.JSON(&dto.CreateOrderRes{Error: dto.Err{Error: err}})

@@ -24,7 +24,7 @@ var TEST_ITEM = &dto.Item{
 }
 
 var TEST_ORDER = &dto.Order{
-	Items:    map[*dto.Item]int{TEST_ITEM: 1},
+	Items:    map[string]int{TEST_ITEM.ID: 1},
 	Location: "test location",
 	UserID:   "61a262824270c01dde9b34cb",
 	StoreID:  "619d1f09c5aa3b27c13861ac",

@@ -154,31 +154,8 @@ func (s *storage) CreateOrder(order *dto.Order) error {
 
 	// convert data from dto order to model order to store in db
 	mOrder := &Order{
-		Items:    make([]*OrderItem, len(order.Items)),
+		Items:    order.Items,
 		Location: order.Location,
-	}
-
-	index := 0
-	for item, count := range order.Items {
-		id, err := primitive.ObjectIDFromHex(item.ID)
-		if err != nil {
-			return err
-		}
-		storeID, err := primitive.ObjectIDFromHex(item.StoreID)
-		if err != nil {
-			return err
-		}
-
-		mOrder.Items[index] = &OrderItem{
-			IconUri: item.IconUri,
-			Name:    item.Name,
-			Price:   item.Price,
-			Count:   count,
-			ID:      id,
-			StoreID: storeID,
-		}
-
-		index++
 	}
 
 	{

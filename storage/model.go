@@ -20,7 +20,7 @@ type OrderItem struct {
 }
 
 type Order struct {
-	Items    []*OrderItem       `bson:"items" json:"items"`
+	Items    map[string]int     `bson:"items" json:"items"`
 	Location string             `bson:"location" json:"location"`
 	ID       primitive.ObjectID `bson:"_id" json:"_id"`
 	UserID   primitive.ObjectID `bson:"user-id" json:"user-id"`
