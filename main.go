@@ -21,9 +21,10 @@ func main() {
 	}
 
 	config := &server.Config{
-		Port:     443,
-		CertFile: "./tls/cert.pem",
-		KeyFile:  "./tls/key.pem",
+		PortHttps: 443,
+		PortHttp:  8080,
+		CertFile:  "./tls/cert.pem",
+		KeyFile:   "./tls/key.pem",
 	}
 	server := server.NewGroceryServer(config, storage)
 	err = server.Start()

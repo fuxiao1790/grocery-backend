@@ -13,6 +13,13 @@ type server struct {
 	config  *Config
 }
 
+type Config struct {
+	PortHttp  int
+	PortHttps int
+	CertFile  string
+	KeyFile   string
+}
+
 func NewGroceryServer(config *Config, st storage.Storage) Server {
 	app := fiber.New()
 
@@ -40,9 +47,18 @@ func NewGroceryServer(config *Config, st storage.Storage) Server {
 }
 
 func (s *server) Start() error {
-	return s.app.ListenTLS(
-		fmt.Sprintf("0.0.0.0:%d", s.config.Port),
-		s.config.CertFile,
-		s.config.KeyFile,
-	)
+	ch := make(chan error)
+	go func() {
+		ch <- s.app.Listen(fmt.Sprintf("0.0.0.0:%d", s.config.PortHttp))
+	}()
+
+	go func() {
+		ch <- s.app.ListenTLS(
+			fmt.Sprintf("0.0.0.0:%d", s.config.PortHttps),
+			s.config.CertFile,
+			s.config.KeyFile,
+		)
+	}()
+
+	return <-ch
 }
