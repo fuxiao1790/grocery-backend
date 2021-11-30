@@ -20,6 +20,7 @@ type LoginReq struct {
 }
 
 type LoginRes struct {
-	UserID string `bson:"userid" json:"userid"`
-	Error  Err    `bson:"error" json:"error"`
+	UserID   string `bson:"userid" json:"userid"`
+	Username string `bson:"username" json:"username"`
+	Error    Err    `bson:"error" json:"error"`
 }

@@ -48,6 +48,7 @@ func NewGroceryServer(config *Config, st storage.Storage) Server {
 
 func (s *server) Start() error {
 	ch := make(chan error)
+
 	go func() {
 		ch <- s.app.Listen(fmt.Sprintf("0.0.0.0:%d", s.config.PortHttp))
 	}()

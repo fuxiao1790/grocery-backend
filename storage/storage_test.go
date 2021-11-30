@@ -18,16 +18,25 @@ const TEST_STORE_COUNT = 5
 var TEST_ITEM = &dto.Item{
 	IconUri: "test uri",
 	Name:    "test name",
-	Price:   "test price",
+	Price:   10,
 	ID:      "619d1f0ac5aa3b27c13861eb",
 	StoreID: "619d1f09c5aa3b27c13861ac",
 }
 
 var TEST_ORDER = &dto.Order{
-	Items:    map[string]int{TEST_ITEM.ID: 1},
-	Location: "test location",
-	UserID:   "61a262824270c01dde9b34cb",
-	StoreID:  "619d1f09c5aa3b27c13861ac",
+	ItemList:  []*dto.OrderItemData{},
+	Location:  "test location",
+	CreatedAt: 0,
+	UserData: &dto.User{
+		Username: "",
+		ID:       "61a262824270c01dde9b34cb",
+	},
+	StoreData: &dto.Store{
+		Location: "",
+		ID:       "619d1f09c5aa3b27c13861ac",
+		Name:     "",
+	},
+	ID: "",
 }
 
 var TEST_STORE = &dto.Store{
@@ -39,7 +48,7 @@ func TestMain(m *testing.M) {
 	m.Run()
 }
 
-func Test_Order(t *testing.T) {
+func Test_CreateOrder(t *testing.T) {
 	st, err := NewMongoDBStorage(&Config{
 		Uri:  MONGO_DB_URI,
 		Name: DB_NAME,
@@ -48,7 +57,12 @@ func Test_Order(t *testing.T) {
 		t.FailNow()
 	}
 
-	err = st.CreateOrder(TEST_ORDER)
+	err = st.CreateOrder(
+		map[string]int{TEST_ITEM.ID: 3},
+		TEST_ORDER.Location,
+		TEST_ORDER.StoreData.ID,
+		TEST_ORDER.UserData.ID,
+	)
 	assert.Nil(t, err)
 }
 
@@ -83,7 +97,7 @@ func Test_User(t *testing.T) {
 	}
 }
 
-func Test_GetList(t *testing.T) {
+func Test_CreateTestData(t *testing.T) {
 	st, err := NewMongoDBStorage(&Config{
 		Uri:  MONGO_DB_URI,
 		Name: DB_NAME,
@@ -111,7 +125,7 @@ func createTestData(st Storage) {
 			st.CreateItem(&dto.Item{
 				IconUri: fmt.Sprintf("%s | uri %d", store.Name, i),
 				Name:    fmt.Sprintf("%s | name %d", store.Name, i),
-				Price:   fmt.Sprintf("%d", i*10),
+				Price:   i * 10,
 				ID:      primitive.NewObjectIDFromTimestamp(time.Now()).String(),
 				StoreID: store.ID,
 			})

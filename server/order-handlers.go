@@ -14,11 +14,11 @@ func GetOrderListHandler(s storage.Storage) func(*fiber.Ctx) error {
 		err := ctx.BodyParser(reqBody)
 		if err != nil {
 			ctx.Status(http.StatusBadRequest)
-			ctx.JSON(dto.GetItemListRes{Items: nil, Error: dto.Err{Error: CANNOT_PARSE_BODY}})
+			ctx.JSON(dto.GetOrderListRes{Orders: nil, Error: dto.Err{Error: CANNOT_PARSE_BODY}})
 			return nil
 		}
 
-		items, err := s.GetOrderList(reqBody.Skip, reqBody.Count)
+		orders, err := s.GetOrderList(reqBody.Skip, reqBody.Count, reqBody.UserID)
 		if err != nil {
 			ctx.Status(http.StatusBadRequest)
 			ctx.JSON(&dto.GetOrderListRes{Orders: nil, Error: dto.Err{Error: err}})
@@ -26,7 +26,7 @@ func GetOrderListHandler(s storage.Storage) func(*fiber.Ctx) error {
 		}
 
 		ctx.Status(http.StatusOK)
-		ctx.JSON(&dto.GetOrderListRes{Orders: items, Error: dto.Err{Error: nil}})
+		ctx.JSON(&dto.GetOrderListRes{Orders: orders, Error: dto.Err{Error: nil}})
 		return nil
 	}
 }
@@ -41,12 +41,7 @@ func CreateOrderHandler(s storage.Storage) func(*fiber.Ctx) error {
 			return nil
 		}
 
-		err = s.CreateOrder(&dto.Order{
-			Items:    reqBody.Items,
-			Location: reqBody.Location,
-			UserID:   reqBody.UserID,
-			StoreID:  reqBody.StoreID,
-		})
+		err = s.CreateOrder(reqBody.Items, reqBody.Location, reqBody.StoreID, reqBody.UserID)
 		if err != nil {
 			ctx.Status(http.StatusBadRequest)
 			ctx.JSON(&dto.CreateOrderRes{Error: dto.Err{Error: err}})

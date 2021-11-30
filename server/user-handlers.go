@@ -49,7 +49,11 @@ func LoginHandler(st storage.Storage) func(*fiber.Ctx) error {
 		}
 
 		ctx.Status(http.StatusOK)
-		ctx.JSON(dto.LoginRes{UserID: user.ID.Hex(), Error: dto.Err{Error: nil}})
+		ctx.JSON(dto.LoginRes{
+			UserID:   user.ID.Hex(),
+			Username: user.Username,
+			Error:    dto.Err{Error: nil},
+		})
 
 		return nil
 	}
