@@ -56,7 +56,7 @@ func Test_GetItemListWithPriceQuery(t *testing.T) {
 		t.FailNow()
 	}
 
-	res, err := st.GetItemList(0, 100, "61a6392d83692e717b418cf4", &dto.ItemListQuery{Name: "", PriceMax: 140, PriceMin: 100})
+	res, err := st.GetItemList(0, 100, "61a634f14a262d1e7a747977", &dto.ItemListQuery{Name: "", PriceMax: 140, PriceMin: 100})
 	if err != nil {
 		t.FailNow()
 	}
@@ -76,7 +76,7 @@ func Test_GetItemListWithNameQuery(t *testing.T) {
 		t.FailNow()
 	}
 
-	res, err := st.GetItemList(0, 100, "61a6392d83692e717b418cf4", &dto.ItemListQuery{Name: "name"})
+	res, err := st.GetItemList(0, 100, "61a634f14a262d1e7a747977", &dto.ItemListQuery{Name: "name"})
 	if err != nil {
 		t.FailNow()
 	}
