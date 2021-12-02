@@ -18,7 +18,7 @@ func GetItemListHandler(s storage.Storage) func(*fiber.Ctx) error {
 			return nil
 		}
 
-		items, err := s.GetItemList(reqBody.Skip, reqBody.Count, reqBody.StoreID)
+		items, err := s.GetItemList(reqBody.Skip, reqBody.Count, reqBody.StoreID, reqBody.Query)
 		if err != nil {
 			ctx.JSON(&dto.GetItemListRes{Items: nil, Error: dto.Err{Error: err}})
 			return nil

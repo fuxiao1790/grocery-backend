@@ -5,7 +5,7 @@ import (
 )
 
 type Storage interface {
-	GetItemList(skip int, count int, storeID string) ([]*dto.Item, error)
+	GetItemList(skip int, count int, storeID string, query *dto.ItemListQuery) ([]*dto.Item, error)
 	GetOrderList(skip int, count int, userID string) ([]*dto.Order, error)
 	GetStoreList(skip int, count int) ([]*dto.Store, error)
 

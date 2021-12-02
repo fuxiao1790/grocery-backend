@@ -9,14 +9,21 @@ type Item struct {
 }
 
 type GetItemListReq struct {
-	Skip    int    `bson:"skip" json:"skip"`
-	Count   int    `bson:"count" json:"count"`
-	StoreID string `bson:"store-id" json:"store-id"`
+	Skip    int            `bson:"skip" json:"skip"`
+	Count   int            `bson:"count" json:"count"`
+	Query   *ItemListQuery `bson:"query" json:"query"`
+	StoreID string         `bson:"store-id" json:"store-id"`
 }
 
 type GetItemListRes struct {
 	Items []*Item `bson:"items" json:"items"`
 	Error Err     `bson:"error" json:"error"`
+}
+
+type ItemListQuery struct {
+	Name     string `bson:" name" json:"name"`
+	PriceMax int    `bson:" price-max" json:"price-max"`
+	PriceMin int    `bson:" price-min" json:"price-min"`
 }
 
 type NewItemReq struct {

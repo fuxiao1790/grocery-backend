@@ -114,7 +114,7 @@ func (s *storage) ValidateID(id string) bool {
 	return primitive.IsValidObjectID(id)
 }
 
-func (s *storage) GetItemList(skip int, count int, storeID string) ([]*dto.Item, error) {
+func (s *storage) GetItemList(skip int, count int, storeID string, query *dto.ItemListQuery) ([]*dto.Item, error) {
 	logrus.Info("Get Item List")
 
 	var cursor *mongo.Cursor
@@ -130,9 +130,29 @@ func (s *storage) GetItemList(skip int, count int, storeID string) ([]*dto.Item,
 			return nil, INVALID_ID
 		}
 
+		//construct query
+		filter := bson.M{"store-id": storeOjbectID}
+		if query != nil {
+			if len(query.Name) != 0 {
+				filter["name"] = bson.M{
+					"$regex": primitive.Regex{
+						Pattern: query.Name,
+						Options: "",
+					},
+				}
+			}
+
+			if query.PriceMax != 0 {
+				filter["price"] = bson.M{
+					"$gt": query.PriceMin,
+					"$lt": query.PriceMax,
+				}
+			}
+		}
+
 		cursor, err = s.itemsCollection.Find(
 			ctx,
-			bson.M{"store-id": storeOjbectID},
+			filter,
 			options.Find().SetSort(bson.M{"_id": -1}),
 			options.Find().SetSkip(int64(skip)),
 			options.Find().SetLimit(int64(count)),

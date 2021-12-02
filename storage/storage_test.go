@@ -3,11 +3,10 @@ package storage
 import (
 	"fmt"
 	"grocery-backend/dto"
+	"strings"
 	"testing"
-	"time"
 
 	"github.com/stretchr/testify/assert"
-	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 const MONGO_DB_URI = "mongodb://localhost:27272"
@@ -46,6 +45,47 @@ var TEST_STORE = &dto.Store{
 
 func TestMain(m *testing.M) {
 	m.Run()
+}
+
+func Test_GetItemListWithPriceQuery(t *testing.T) {
+	st, err := NewMongoDBStorage(&Config{
+		Uri:  MONGO_DB_URI,
+		Name: DB_NAME,
+	})
+	if err != nil {
+		t.FailNow()
+	}
+
+	res, err := st.GetItemList(0, 100, "61a6392d83692e717b418cf4", &dto.ItemListQuery{Name: "", PriceMax: 140, PriceMin: 100})
+	if err != nil {
+		t.FailNow()
+	}
+
+	for _, item := range res {
+		assert.True(t, item.Price > 100)
+		assert.True(t, item.Price < 140)
+	}
+}
+
+func Test_GetItemListWithNameQuery(t *testing.T) {
+	st, err := NewMongoDBStorage(&Config{
+		Uri:  MONGO_DB_URI,
+		Name: DB_NAME,
+	})
+	if err != nil {
+		t.FailNow()
+	}
+
+	res, err := st.GetItemList(0, 100, "61a6392d83692e717b418cf4", &dto.ItemListQuery{Name: "name"})
+	if err != nil {
+		t.FailNow()
+	}
+
+	assert.True(t, len(res) > 0)
+
+	for _, item := range res {
+		assert.True(t, strings.Contains(item.Name, "name"))
+	}
 }
 
 func Test_CreateOrder(t *testing.T) {
@@ -114,7 +154,7 @@ func createTestData(st Storage) {
 		st.CreateStore(&dto.Store{
 			Location: fmt.Sprintf("location %d", i),
 			Name:     fmt.Sprintf("name %d", i),
-			ID:       primitive.NewObjectIDFromTimestamp(time.Now()).String(),
+			ID:       "",
 		})
 	}
 
@@ -126,7 +166,7 @@ func createTestData(st Storage) {
 				IconUri: fmt.Sprintf("%s | uri %d", store.Name, i),
 				Name:    fmt.Sprintf("%s | name %d", store.Name, i),
 				Price:   i * 10,
-				ID:      primitive.NewObjectIDFromTimestamp(time.Now()).String(),
+				ID:      "",
 				StoreID: store.ID,
 			})
 		}
